@@ -1,0 +1,442 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="theme-color" content="#102a43">
+    <meta name="description" content="CountyConnect — access county services, submit service requests, and track their progress online.">
+
+    <title>{% block title %}CountyConnect | County Services Portal{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+          rel="stylesheet">
+
+    <!-- Project Styles -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        :root {
+            --cc-navy: #102a43;
+            --cc-navy-light: #183b56;
+            --cc-teal: #0d9488;
+            --cc-teal-dark: #0f766e;
+            --cc-background: #f4f7fb;
+            --cc-text: #243b53;
+            --cc-muted: #627d98;
+            --cc-border: #e2e8f0;
+        }
+
+        html {
+            min-height: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--cc-background);
+            color: var(--cc-text);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", sans-serif;
+        }
+
+        /* Navigation */
+        .cc-navbar {
+            background: linear-gradient(
+                110deg,
+                var(--cc-navy),
+                var(--cc-navy-light)
+            );
+            box-shadow: 0 4px 18px rgba(16, 42, 67, 0.12);
+        }
+
+        .cc-navbar .navbar-brand {
+            color: #fff;
+            letter-spacing: -0.4px;
+        }
+
+        .cc-brand-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(94, 234, 212, 0.14);
+            color: #5eead4;
+            border-radius: 12px;
+            margin-right: 9px;
+        }
+
+        .cc-navbar .nav-link {
+            color: rgba(255, 255, 255, 0.78);
+            padding: 9px 12px;
+            border-radius: 9px;
+            margin: 0 2px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .cc-navbar .nav-link:hover,
+        .cc-navbar .nav-link:focus {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.10);
+        }
+
+        .cc-navbar .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.35);
+        }
+
+        .cc-navbar .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.2rem rgba(94, 234, 212, 0.2);
+        }
+
+        .cc-btn-primary {
+            background: var(--cc-teal);
+            border-color: var(--cc-teal);
+            color: #fff;
+        }
+
+        .cc-btn-primary:hover,
+        .cc-btn-primary:focus {
+            background: var(--cc-teal-dark);
+            border-color: var(--cc-teal-dark);
+            color: #fff;
+        }
+
+        .cc-register-btn {
+            background: #fff;
+            color: var(--cc-navy);
+            border: 1px solid #fff;
+        }
+
+        .cc-register-btn:hover {
+            background: #e6fffb;
+            color: var(--cc-navy);
+            border-color: #e6fffb;
+        }
+
+        .cc-user-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 7px 12px;
+            border-radius: 30px;
+            max-width: 190px;
+        }
+
+        .cc-user-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Main content */
+        .cc-main {
+            width: 100%;
+            flex: 1 0 auto;
+        }
+
+        .cc-content {
+            padding-top: 28px;
+            padding-bottom: 44px;
+        }
+
+        /* Consistent shared card styling */
+        .cc-main .card {
+            border-color: var(--cc-border);
+        }
+
+        .cc-main .shadow-sm {
+            box-shadow: 0 4px 18px rgba(16, 42, 67, 0.055) !important;
+        }
+
+        .cc-main .form-control:focus,
+        .cc-main .form-select:focus {
+            border-color: #5eead4;
+            box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.12);
+        }
+
+        .cc-main .btn {
+            transition: background-color 0.2s ease,
+                        border-color 0.2s ease,
+                        transform 0.2s ease;
+        }
+
+        .cc-main .btn-primary {
+            background-color: var(--cc-teal);
+            border-color: var(--cc-teal);
+        }
+
+        .cc-main .btn-primary:hover {
+            background-color: var(--cc-teal-dark);
+            border-color: var(--cc-teal-dark);
+        }
+
+        /* Django messages */
+        .cc-alert {
+            border: 0;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(16, 42, 67, 0.04);
+            padding: 15px 18px;
+        }
+
+        /* Footer */
+        .cc-footer {
+            flex-shrink: 0;
+            background: #fff;
+            border-top: 1px solid var(--cc-border);
+        }
+
+        .cc-footer-brand {
+            color: var(--cc-navy);
+            font-weight: 700;
+        }
+
+        .cc-footer-icon {
+            color: var(--cc-teal);
+        }
+
+        @media (max-width: 991.98px) {
+            .cc-navbar .navbar-collapse {
+                padding-top: 14px;
+                padding-bottom: 8px;
+            }
+
+            .cc-navbar .navbar-nav {
+                gap: 4px;
+            }
+
+            .cc-navbar .nav-link {
+                padding: 10px 12px;
+            }
+
+            .cc-auth-actions {
+                margin-top: 12px;
+                align-items: flex-start !important;
+            }
+
+            .cc-auth-actions .nav-item {
+                margin: 3px 0;
+            }
+
+            .cc-navbar .navbar-nav .btn {
+                margin-left: 0 !important;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .cc-content {
+                padding-top: 20px;
+                padding-bottom: 30px;
+            }
+
+            .cc-brand-name {
+                font-size: 1.05rem;
+            }
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark cc-navbar">
+        <div class="container">
+
+            <a class="navbar-brand d-flex align-items-center fw-bold me-lg-4"
+               href="{% url 'home' %}">
+                <span class="cc-brand-icon">
+                    <i class="bi bi-building fs-5"></i>
+                </span>
+                <span class="cc-brand-name">CountyConnect</span>
+            </a>
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#ccNavbar"
+                    aria-controls="ccNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="ccNavbar">
+
+                <!-- Main Links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    {% if user.is_authenticated %}
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'services:submit' %}">
+                                <i class="bi bi-plus-circle me-1"></i>
+                                New Request
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'services:my_requests' %}">
+                                <i class="bi bi-folder2-open me-1"></i>
+                                My Requests
+                            </a>
+                        </li>
+
+                        {% if user.is_staff %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'dashboard:index' %}">
+                                    <i class="bi bi-speedometer2 me-1"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'services:manage' %}">
+                                    <i class="bi bi-kanban me-1"></i>
+                                    Manage Requests
+                                </a>
+                            </li>
+                        {% endif %}
+
+                    {% else %}
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'services:track' %}">
+                                <i class="bi bi-search me-1"></i>
+                                Track a Request
+                            </a>
+                        </li>
+
+                    {% endif %}
+
+                </ul>
+
+                <!-- Account Actions -->
+                <ul class="navbar-nav align-items-lg-center cc-auth-actions">
+
+                    {% if user.is_authenticated %}
+
+                        <li class="nav-item me-lg-2">
+                            <span class="cc-user-chip">
+                                <i class="bi bi-person-circle"></i>
+                                <span class="cc-user-name">{{ user.username }}</span>
+                            </span>
+                        </li>
+
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'accounts:logout' %}">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="btn btn-outline-light btn-sm rounded-3 px-3">
+                                    <i class="bi bi-box-arrow-right me-1"></i>
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+
+                    {% else %}
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:login' %}">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>
+                                Login
+                            </a>
+                        </li>
+
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn cc-register-btn btn-sm rounded-3 px-3 fw-semibold"
+                               href="{% url 'accounts:register' %}">
+                                <i class="bi bi-person-plus me-1"></i>
+                                Register
+                            </a>
+                        </li>
+
+                    {% endif %}
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="cc-main">
+        <div class="container cc-content">
+
+            {% if messages %}
+                <div class="mb-4" aria-live="polite">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show cc-alert"
+                             role="alert">
+
+                            {% if message.tags == 'success' %}
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                            {% elif message.tags == 'error' or message.tags == 'danger' %}
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            {% elif message.tags == 'warning' %}
+                                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                            {% else %}
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                            {% endif %}
+
+                            {{ message }}
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="cc-footer py-4">
+        <div class="container">
+            <div class="row align-items-center g-3">
+
+                <div class="col-12 col-md-6 text-center text-md-start">
+                    <div class="cc-footer-brand mb-1">
+                        <i class="bi bi-building cc-footer-icon me-1"></i>
+                        CountyConnect
+                    </div>
+                    <div class="small text-secondary">
+                        Your county services, made simpler.
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 text-center text-md-end">
+                    <div class="small text-secondary">
+                        &copy; {% now "Y" %} CountyConnect
+                    </div>
+                    <div class="small text-secondary mt-1">
+                        Public Service Request System · Portfolio Project
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

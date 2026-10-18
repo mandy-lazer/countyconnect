@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center">
+
+        <div class="col-lg-10 col-xl-9">
+            <div class="card border-0 shadow-lg overflow-hidden rounded-4">
+                <div class="row g-0">
+
+                    <!-- Branding Panel -->
+                    <div class="col-lg-5 d-none d-lg-flex">
+                        <div class="w-100 p-5 text-white d-flex flex-column justify-content-between"
+                             style="background:linear-gradient(145deg,#102a43,#0d9488);min-height:580px;">
+
+                            <div>
+                                <div class="d-flex align-items-center gap-3 mb-5">
+                                    <div class="rounded-3 p-3 bg-white bg-opacity-10">
+                                        <i class="bi bi-building fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-bold mb-0">CountyConnect</h4>
+                                        <small class="opacity-75">Public Service Portal</small>
+                                    </div>
+                                </div>
+
+                                <h2 class="fw-bold lh-base mb-3">
+                                    Join your<br>
+                                    digital county<br>
+                                    community.
+                                </h2>
+
+                                <p class="opacity-75 lh-lg">
+                                    Create an account to discover county services,
+                                    submit requests, and track their progress online.
+                                </p>
+
+                                <div class="mt-4">
+                                    <div class="d-flex align-items-center gap-3 mb-4">
+                                        <i class="bi bi-check-circle fs-4"></i>
+                                        <span>Access available county services</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3 mb-4">
+                                        <i class="bi bi-check-circle fs-4"></i>
+                                        <span>Track your service requests</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <i class="bi bi-check-circle fs-4"></i>
+                                        <span>Receive request updates</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <hr class="border-light opacity-25">
+                                <small class="opacity-75">
+                                    Your community. Your services. Your voice.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <div class="col-lg-7">
+                        <div class="card-body p-4 p-md-5">
+
+                            <div class="mb-4">
+                                <span class="badge rounded-pill px-3 py-2 mb-3"
+                                      style="background:#ccfbf1;color:#115e59;">
+                                    <i class="bi bi-person-plus me-1"></i>
+                                    GET STARTED
+                                </span>
+
+                                <h2 class="fw-bold mb-2" style="color:#102a43;">
+                                    Create your account
+                                </h2>
+
+                                <p class="text-secondary">
+                                    Enter your details to join CountyConnect.
+                                </p>
+                            </div>
+
+                            <form method="post">
+                                {% csrf_token %}
+
+                                {{ form|crispy }}
+
+                                <button type="submit"
+                                        class="btn btn-lg w-100 text-white fw-semibold mt-3 py-3 rounded-3"
+                                        style="background:#0d9488;border:none;">
+                                    Create account
+                                    <i class="bi bi-arrow-right ms-2"></i>
+                                </button>
+                            </form>
+
+                            <div class="text-center mt-4">
+                                <span class="text-secondary">
+                                    Already have an account?
+                                </span>
+                                <a href="{% url 'accounts:login' %}"
+                                   class="fw-semibold text-decoration-none ms-1"
+                                   style="color:#0d9488;">
+                                    Sign in
+                                </a>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-center gap-2 mt-4 pt-3 border-top">
+                                <i class="bi bi-shield-lock text-success"></i>
+                                <small class="text-secondary">
+                                    Keep your account credentials private.
+                                </small>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <p class="text-center text-secondary small mt-4">
+                &copy; {% now "Y" %} CountyConnect. Public service, made simpler.
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

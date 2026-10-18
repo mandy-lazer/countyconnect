@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <span class="badge rounded-pill px-3 py-2 mb-3"
+              style="background:#ccfbf1;color:#115e59;">
+            <i class="bi bi-search me-1"></i>
+            REQUEST TRACKING
+        </span>
+
+        <h2 class="fw-bold mb-2" style="color:#102a43;">
+            Track Your Request
+        </h2>
+
+        <p class="text-secondary mx-auto" style="max-width:580px;">
+            Check the current status of your county service request using
+            its unique reference number.
+        </p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+
+            <!-- Search Card -->
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+                <div style="height:5px;background:#0d9488;"></div>
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <div class="text-center mb-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                             style="width:76px;height:76px;background:#ccfbf1;color:#115e59;">
+                            <i class="bi bi-clipboard2-check" style="font-size:2rem;"></i>
+                        </div>
+
+                        <h5 class="fw-bold mb-2" style="color:#102a43;">
+                            Enter Your Reference Number
+                        </h5>
+
+                        <p class="small text-secondary mb-0">
+                            You can find this number in your request details.
+                        </p>
+                    </div>
+
+                    <form method="get">
+                        <label for="requestReference"
+                               class="form-label fw-semibold small">
+                            Request reference
+                        </label>
+
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-hash text-secondary"></i>
+                            </span>
+
+                            <input
+                                id="requestReference"
+                                name="ref"
+                                value="{{ reference|default:'' }}"
+                                class="form-control border-start-0"
+                                placeholder="e.g. CSR-A1B2C3"
+                                autocomplete="off"
+                                required
+                            >
+
+                            <button type="submit"
+                                    class="btn text-white px-4"
+                                    style="background:#0d9488;">
+                                <i class="bi bi-search me-1"></i>
+                                Track
+                            </button>
+                        </div>
+
+                        <div class="small text-secondary">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Enter the reference number exactly as provided.
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- Matching Request -->
+            {% if req %}
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+                <div class="card-body p-4">
+
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                             style="width:50px;height:50px;background:#dcfce7;color:#166534;">
+                            <i class="bi bi-check2-circle fs-3"></i>
+                        </div>
+
+                        <div>
+                            <h5 class="fw-bold mb-1" style="color:#102a43;">
+                                Request Found
+                            </h5>
+                            <p class="small text-secondary mb-0">
+                                Here is the available status information.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="rounded-3 p-3 mb-3"
+                         style="background:#f8fafc;border:1px solid #e2e8f0;">
+                        <div class="small text-secondary mb-1">
+                            REFERENCE NUMBER
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between gap-2">
+                            <code class="fw-bold fs-6">{{ req.reference }}</code>
+                            <span class="badge rounded-pill"
+                                  style="background:#e0f2fe;color:#075985;">
+                                <i class="bi bi-patch-check me-1"></i>Matched
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="small text-secondary mb-1">
+                            Service category
+                        </div>
+                        <h6 class="fw-bold mb-0" style="color:#102a43;">
+                            <i class="bi bi-folder2-open me-2"
+                               style="color:#0d9488;"></i>
+                            {{ req.get_category_display }}
+                        </h6>
+                    </div>
+
+                    <hr style="border-color:#e2e8f0;">
+
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                        <div>
+                            <div class="small text-secondary mb-2">
+                                Current status
+                            </div>
+                            {% include 'services/_badge.html' with status=req.status label=req.get_status_display %}
+                        </div>
+
+                        <div class="text-md-end">
+                            <div class="small text-secondary mb-1">
+                                Date submitted
+                            </div>
+                            <div class="small fw-semibold">
+                                <i class="bi bi-calendar3 me-1"></i>
+                                {{ req.created_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-light border rounded-3 small mb-0">
+                        <i class="bi bi-info-circle me-2"
+                           style="color:#0d9488;"></i>
+                        This status reflects the information currently available
+                        for the request.
+                    </div>
+
+                </div>
+            </div>
+
+            {% elif reference %}
+            <!-- No Matching Request -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body text-center p-4 p-lg-5">
+
+                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center"
+                         style="width:72px;height:72px;background:#fef3c7;color:#92400e;">
+                        <i class="bi bi-search" style="font-size:2rem;"></i>
+                    </div>
+
+                    <h5 class="fw-bold mb-2" style="color:#102a43;">
+                        No Request Found
+                    </h5>
+
+                    <p class="text-secondary mb-3">
+                        We couldn't find a request matching the reference number:
+                    </p>
+
+                    <code class="d-inline-block rounded-3 px-3 py-2 mb-3"
+                          style="background:#f8fafc;">
+                        {{ reference }}
+                    </code>
+
+                    <p class="small text-secondary mb-0">
+                        Check the reference number for typing errors and try again.
+                    </p>
+
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Help Section -->
+            <div class="card border-0 rounded-4"
+                 style="background:#102a43;">
+                <div class="card-body p-4 text-white">
+                    <div class="d-flex gap-3">
+                        <i class="bi bi-lightbulb fs-3"
+                           style="color:#5eead4;"></i>
+                        <div>
+                            <h6 class="fw-bold mb-2">Need help?</h6>
+                            <p class="small text-white-50 mb-3">
+                                Make sure you use the reference number associated
+                                with your submitted request.
+                            </p>
+                            <a href="{% url 'services:my_requests' %}"
+                               class="btn btn-outline-light btn-sm rounded-3">
+                                <i class="bi bi-folder2-open me-1"></i>
+                                View My Requests
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <small class="text-secondary">
+                    <i class="bi bi-shield-check me-1"></i>
+                    CountyConnect · Your county services, made simpler.
+                </small>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

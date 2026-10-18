@@ -1,0 +1,26 @@
+{% if status == 'pending' %}
+    <span class="badge rounded-pill px-3 py-2 fw-semibold"
+          style="background:#fef3c7;color:#92400e;">
+        <i class="bi bi-clock-history me-1"></i>{{ label|default:"Pending" }}
+    </span>
+{% elif status == 'in_progress' %}
+    <span class="badge rounded-pill px-3 py-2 fw-semibold"
+          style="background:#dbeafe;color:#1d4ed8;">
+        <i class="bi bi-arrow-repeat me-1"></i>{{ label|default:"In Progress" }}
+    </span>
+{% elif status == 'resolved' %}
+    <span class="badge rounded-pill px-3 py-2 fw-semibold"
+          style="background:#d1fae5;color:#047857;">
+        <i class="bi bi-check-circle me-1"></i>{{ label|default:"Resolved" }}
+    </span>
+{% elif status == 'rejected' %}
+    <span class="badge rounded-pill px-3 py-2 fw-semibold"
+          style="background:#fee2e2;color:#b91c1c;">
+        <i class="bi bi-x-circle me-1"></i>{{ label|default:"Rejected" }}
+    </span>
+{% else %}
+    <span class="badge rounded-pill px-3 py-2 fw-semibold"
+          style="background:#f1f5f9;color:#475569;">
+        <i class="bi bi-info-circle me-1"></i>{{ label|default:status|default:"Unknown" }}
+    </span>
+{% endif %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-9 col-lg-7">
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div style="height:5px;background:#0d9488;"></div>
+
+                <div class="card-body text-center px-4 py-5 px-lg-5">
+
+                    <!-- Error Illustration -->
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
+                         style="width:120px;height:120px;background:#e0f2fe;color:#0369a1;">
+                        <i class="bi bi-map" style="font-size:4rem;"></i>
+                    </div>
+
+                    <div class="display-1 fw-bold mb-2"
+                         style="color:#0d9488;letter-spacing:-4px;">
+                        404
+                    </div>
+
+                    <span class="badge rounded-pill px-3 py-2 mb-3"
+                          style="background:#f1f5f9;color:#475569;">
+                        <i class="bi bi-exclamation-circle me-1"></i>
+                        PAGE NOT FOUND
+                    </span>
+
+                    <h2 class="fw-bold mb-3" style="color:#102a43;">
+                        Looks like you're off the map!
+                    </h2>
+
+                    <p class="text-secondary mx-auto mb-4"
+                       style="max-width:420px;line-height:1.8;">
+                        Sorry, we couldn't find the page you're looking for.
+                        It may have moved, been removed, or the address may be incorrect.
+                    </p>
+
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                        <a href="{% url 'home' %}"
+                           class="btn text-white rounded-3 px-4 py-2 fw-semibold"
+                           style="background:#0d9488;">
+                            <i class="bi bi-house-door me-2"></i>
+                            Back to Home
+                        </a>
+
+                        <button type="button"
+                                onclick="history.back()"
+                                class="btn btn-light border rounded-3 px-4 py-2">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Go Back
+                        </button>
+                    </div>
+
+                    <hr class="my-4" style="border-color:#e2e8f0;">
+
+                    <p class="small text-secondary mb-0">
+                        <i class="bi bi-shield-check me-1"></i>
+                        CountyConnect · Your county services, made simpler.
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

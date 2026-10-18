@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container-fluid py-3">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+        <a href="{% url 'services:my_requests' %}"
+           class="text-decoration-none small text-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back to My Requests
+        </a>
+
+        <div class="mt-3">
+            <span class="badge rounded-pill px-3 py-2 mb-2"
+                  style="background:#ccfbf1;color:#115e59;">
+                <i class="bi bi-clipboard2-check me-1"></i>
+                CITIZEN SERVICES
+            </span>
+
+            <h2 class="fw-bold mb-1" style="color:#102a43;">
+                New Service Request
+            </h2>
+
+            <p class="text-secondary mb-0">
+                Submit your concern or request for assistance from your county.
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Main Form -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                <div style="height:5px;background:#0d9488;"></div>
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                             style="width:52px;height:52px;background:#ccfbf1;color:#115e59;">
+                            <i class="bi bi-file-earmark-plus fs-3"></i>
+                        </div>
+
+                        <div>
+                            <h5 class="fw-bold mb-1" style="color:#102a43;">
+                                Request Information
+                            </h5>
+                            <p class="small text-secondary mb-0">
+                                Complete the form below to submit your request.
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr class="mb-4" style="border-color:#e2e8f0;">
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {{ form|crispy }}
+
+                        <div class="rounded-3 p-3 my-4"
+                             style="background:#f8fafc;border:1px solid #e2e8f0;">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="bi bi-info-circle mt-1"
+                                   style="color:#0d9488;"></i>
+                                <div class="small text-secondary">
+                                    Please ensure the information you provide is
+                                    accurate. Include a clear description and any
+                                    supporting attachment requested by the form.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 pt-2">
+                            <button type="submit"
+                                    class="btn text-white rounded-3 px-4 py-2 fw-semibold"
+                                    style="background:#0d9488;">
+                                <i class="bi bi-send me-2"></i>
+                                Submit Request
+                            </button>
+
+                            <a href="{% url 'services:my_requests' %}"
+                               class="btn btn-light border rounded-3 px-4 py-2">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Sidebar -->
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <div class="rounded-3 d-flex align-items-center justify-content-center mb-3"
+                         style="width:48px;height:48px;background:#e0f2fe;color:#0369a1;">
+                        <i class="bi bi-lightbulb fs-4"></i>
+                    </div>
+
+                    <h5 class="fw-bold mb-3" style="color:#102a43;">
+                        Before You Submit
+                    </h5>
+
+                    <div class="d-flex gap-3 mb-3">
+                        <i class="bi bi-check-circle-fill mt-1"
+                           style="color:#0d9488;"></i>
+                        <div class="small text-secondary">
+                            <strong class="text-dark">Choose carefully</strong>
+                            <div>Select the relevant service or category in the form.</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mb-3">
+                        <i class="bi bi-check-circle-fill mt-1"
+                           style="color:#0d9488;"></i>
+                        <div class="small text-secondary">
+                            <strong class="text-dark">Describe the issue</strong>
+                            <div>Provide enough detail for the responsible department to understand your concern.</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3">
+                        <i class="bi bi-check-circle-fill mt-1"
+                           style="color:#0d9488;"></i>
+                        <div class="small text-secondary">
+                            <strong class="text-dark">Check your location</strong>
+                            <div>Enter an accurate location so your request can be directed appropriately.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4"
+                 style="background:#102a43;">
+                <div class="card-body p-4 text-white">
+                    <i class="bi bi-shield-check fs-2 mb-3 d-block"
+                       style="color:#5eead4;"></i>
+
+                    <h5 class="fw-bold">Track Your Request</h5>
+
+                    <p class="small text-white-50 mb-3">
+                        After submission, visit your requests page to check
+                        the status and review available updates.
+                    </p>
+
+                    <a href="{% url 'services:my_requests' %}"
+                       class="btn btn-outline-light btn-sm rounded-3">
+                        <i class="bi bi-folder2-open me-1"></i>
+                        My Requests
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <small class="text-secondary">
+            <i class="bi bi-shield-check me-1"></i>
+            CountyConnect · Your county services, made simpler.
+        </small>
+    </div>
+
+</div>
+{% endblock %}
