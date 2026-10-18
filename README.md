@@ -499,7 +499,3 @@ Add a license before distributing the project for reuse. Until a license is incl
 **Mandy Lazer**
 
 GitHub: https://github.com/mandy-lazer
-
-## Disclaimer
-
-CountyConnect is an independent software project inspired by digital public-service platforms. It is not an official Kenyan government or county-government service unless formally authorized.
