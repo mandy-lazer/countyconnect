@@ -38,6 +38,6 @@ To simplify access to county public services by providing a centralized platform
 
 ## Author
 
-**Mandy Lazer**
+Enock kipngetich
 
 GitHub: https://github.com/mandy-lazer
