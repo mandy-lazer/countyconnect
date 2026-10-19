@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 
 from decouple import config
+from django.core.exceptions import ImproperlyConfigured
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,14 +13,39 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 # --------------------------------------------------
 
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-only')
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+SECRET_KEY = config('SECRET_KEY', default='')
+
+if not SECRET_KEY:
+    raise ImproperlyConfigured(
+        'SECRET_KEY must be configured in your environment.'
+    )
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
     default='localhost,127.0.0.1,0.0.0.0',
-    cast=lambda value: [host.strip() for host in value.split(',') if host.strip()],
+    cast=lambda value: [
+        host.strip()
+        for host in value.split(',')
+        if host.strip()
+    ],
 )
+
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='',
+    cast=lambda value: [
+        origin.strip()
+        for origin in value.split(',')
+        if origin.strip()
+    ],
+)
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 
 
 # --------------------------------------------------
@@ -37,6 +63,8 @@ INSTALLED_APPS = [
     # Third-party applications
     'crispy_forms',
     'crispy_bootstrap5',
+    'cloudinary_storage',
+    'cloudinary',
 
     # CountyConnect applications
     'accounts',
@@ -88,7 +116,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # --------------------------------------------------
-# DATABASE — POSTGRESQL
+# DATABASE — POSTGRESQL / NEON
 # --------------------------------------------------
 
 DATABASES = {
@@ -97,8 +125,12 @@ DATABASES = {
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST', default='localhost'),
+        'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT', default='5432'),
+        'OPTIONS': {
+            'sslmode': config('DB_SSLMODE', default='require'),
+        },
+        'CONN_MAX_AGE': 0,
     }
 }
 
@@ -125,12 +157,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': (
             'django.contrib.auth.password_validation.'
             'MinimumLengthValidator'
-        ),
-    },
-    {
-        'NAME': (
-            'django.contrib.auth.password_validation.'
-            'CommonPasswordValidator'
         ),
     },
     {
@@ -169,11 +195,37 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # --------------------------------------------------
-# USER-UPLOADED MEDIA
+# USER-UPLOADED MEDIA — CLOUDINARY IN PRODUCTION
 # --------------------------------------------------
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+if not DEBUG:
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default=''),
+        'API_KEY': config('CLOUDINARY_API_KEY', default=''),
+        'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
+    }
+
+    if not all(CLOUDINARY_STORAGE.values()):
+        raise ImproperlyConfigured(
+            'Cloudinary credentials must be configured in production.'
+        )
+
+    STORAGES = {
+        'default': {
+            'BACKEND': (
+                'cloudinary_storage.storage.MediaCloudinaryStorage'
+            ),
+        },
+        'staticfiles': {
+            'BACKEND': (
+                'django.contrib.staticfiles.storage.StaticFilesStorage'
+            ),
+        },
+    }
+
+else:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # --------------------------------------------------
@@ -212,7 +264,11 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = config('COUNTYCONNECT_EMAIL', default='')
-EMAIL_HOST_PASSWORD = config('COUNTYCONNECT_EMAIL_APP_PASSWORD', default='')
+
+EMAIL_HOST_PASSWORD = config(
+    'COUNTYCONNECT_EMAIL_APP_PASSWORD',
+    default='',
+)
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_TIMEOUT = 15
